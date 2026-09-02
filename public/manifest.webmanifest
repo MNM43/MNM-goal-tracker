@@ -1,0 +1,25 @@
+{
+  "name": "目标台 · 个人目标管理工作台",
+  "short_name": "目标台",
+  "description": "年/季/月/周目标拆解、甘特图、打卡与 AI 复盘的个人目标管理工作台",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
