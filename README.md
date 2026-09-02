@@ -45,6 +45,27 @@ npm run preview
 
 ---
 
+## 部署（GitHub Pages）
+
+已配置好子路径部署，线上地址：**https://mnm43.github.io/MNM-goal-tracker/**
+
+后续改动后一键重新发布：
+
+```bash
+# 1. 在仓库根目录，设置带 repo 权限的 GitHub 令牌（仅本次 shell 使用，不会写入文件）
+export GH_TOKEN=ghp_xxx
+
+# 2. 一键构建并推送到 gh-pages 分支（GitHub Pages 会自动重新发布）
+npm run deploy
+```
+
+脚本逻辑（`deploy.sh`）：`npm run build` → 把 `dist/` 发布到独立的 `gh-pages` 分支 → 强制推送 → GitHub Pages 自动生效。
+仓库名 / 用户名可改：`REPO=你的仓库 GH_USER=你的用户名 npm run deploy`。
+
+> 注：GitHub Pages 项目页地址在 `/仓库名/` 子路径下，因此 `vite.config.ts` 的 `base` 已设为 `/MNM-goal-tracker/`，`sw.js`、`manifest.webmanifest`、`index.html` 的资源路径也相应改为相对/子路径，切勿改回根路径否则子路径下资源全 404。
+
+---
+
 ## 数据模型
 
 所有数据存于浏览器 `localStorage`（key：`goal-tracker-v1`），由 Zustand `persist` 管理。
