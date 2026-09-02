@@ -52,14 +52,16 @@ npm run preview
 后续改动后一键重新发布：
 
 ```bash
-# 1. 在仓库根目录，设置带 repo 权限的 GitHub 令牌（仅本次 shell 使用，不会写入文件）
-export GH_TOKEN=ghp_xxx
+# 方式 A（推荐，免令牌）：本机已把 SSH 公钥加到 GitHub，直接运行
+npm run deploy
 
-# 2. 一键构建并推送到 gh-pages 分支（GitHub Pages 会自动重新发布）
+# 方式 B（令牌）：未配置 SSH 时，用带 repo 权限的令牌（仅本次终端使用，不写入文件）
+export GH_TOKEN=ghp_xxx
 npm run deploy
 ```
 
 脚本逻辑（`deploy.sh`）：`npm run build` → 把 `dist/` 发布到独立的 `gh-pages` 分支 → 强制推送 → GitHub Pages 自动生效。
+默认走 SSH（`git@github.com:MNM43/MNM-goal-tracker.git`），未配置 SSH 时回退到 `GH_TOKEN` 的 HTTPS 方式。
 仓库名 / 用户名可改：`REPO=你的仓库 GH_USER=你的用户名 npm run deploy`。
 
 > 注：GitHub Pages 项目页地址在 `/仓库名/` 子路径下，因此 `vite.config.ts` 的 `base` 已设为 `/MNM-goal-tracker/`，`sw.js`、`manifest.webmanifest`、`index.html` 的资源路径也相应改为相对/子路径，切勿改回根路径否则子路径下资源全 404。

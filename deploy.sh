@@ -1,13 +1,26 @@
 #!/usr/bin/env bash
 # 部署到 GitHub Pages（gh-pages 分支）
-# 用法（在仓库根目录执行）:
-#   GH_TOKEN=ghp_xxx ./deploy.sh
+#
+# 认证方式（二选一，优先 SSH，免令牌更安全）:
+#   A. SSH（推荐）: 本机已把 SSH 公钥加到 GitHub，直接运行：
+#        ./deploy.sh
+#   B. 令牌: 未配置 SSH 时，用令牌（仅本次终端使用，不写入文件）：
+#        GH_TOKEN=ghp_xxx ./deploy.sh
+#
 # 可选环境变量: REPO（默认 MNM-goal-tracker）、GH_USER（默认 MNM43）
 set -euo pipefail
 
-: "${GH_TOKEN:?请先设置环境变量 GH_TOKEN（GitHub Personal Access Token，需 repo 权限）}"
 REPO="${REPO:-MNM-goal-tracker}"
 GH_USER="${GH_USER:-MNM43}"
+
+# 选远程地址：有令牌走 HTTPS，否则走 SSH（免令牌）
+if [ -n "${GH_TOKEN:-}" ]; then
+  REMOTE="https://$GH_USER:$GH_TOKEN@github.com/$GH_USER/$REPO.git"
+  echo "▶ 使用 HTTPS + 令牌 认证"
+else
+  REMOTE="git@github.com:$GH_USER/$REPO.git"
+  echo "▶ 使用 SSH 认证（git@github.com:$GH_USER/$REPO.git）"
+fi
 
 echo "▶ 构建生产包..."
 npm run build
@@ -25,6 +38,6 @@ git config commit.gpgsign false
 git add -A
 git commit -q -m "deploy: $(date +%Y%m%d%H%M)"
 git branch -M gh-pages
-git push "https://$GH_USER:$GH_TOKEN@github.com/$GH_USER/$REPO.git" gh-pages --force
+git push "$REMOTE" gh-pages --force
 
 echo "✅ 已发布到 https://$GH_USER.github.io/$REPO/"
